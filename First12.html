@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative Library</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;700&display=swap');
+        
+        :root { 
+            --bg: #050505; --text: #ffffff; --accent: #00ff88; --secondary: #0077ff; 
+            --glass: rgba(255, 255, 255, 0.03); --border: rgba(255, 255, 255, 0.1);
+            --paper-bg: #000000; --paper-text: #ffffff;
+        }
+        .light-mode { 
+            --bg: #fdfdfd; --text: #0a0a0a; --accent: #00bf72; --secondary: #0055ff; 
+            --glass: rgba(0, 0, 0, 0.02); --border: rgba(0, 0, 0, 0.08);
+            --paper-bg: #ffffff; --paper-text: #111111;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); transition: 0.5s; overflow: hidden; }
+
+        /* Advanced Background */
+        .glow { position: absolute; width: 700px; height: 700px; filter: blur(180px); opacity: 0.15; z-index: 0; pointer-events: none; }
+        .green { top: -15%; left: 0%; background: var(--accent); }
+        .blue { bottom: -15%; right: 0%; background: var(--secondary); }
+        
+        .library-bg { 
+            position: absolute; width: 100%; height: 100%; 
+            background: url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover; opacity: 0.18; z-index: -1;
+            mask-image: linear-gradient(to bottom, black, transparent, black);
+        }
+
+        .main-container { display: flex; align-items: center; justify-content: space-around; height: 100vh; padding: 0 8%; position: relative; z-index: 10; }
+
+        /* Minimalist Lamp */
+        .lamp { cursor: pointer; text-align: center; width: 150px; transition: 0.3s; }
+        .lamp:hover { transform: scale(1.05); }
+        .wire { width: 2px; height: 180px; background: #333; margin: -180px auto 0; }
+        .lamp-head { width: 120px; height: 80px; background: #151515; border-radius: 60px 60px 10px 10px; border: 1.5px solid #222; position: relative; transition: 0.5s; }
+        .eyes { display: flex; justify-content: center; gap: 16px; padding-top: 35px; }
+        .eye { width: 10px; height: 3px; background: #333; border-radius: 10px; transition: 0.5s; }
+        .smile { width: 20px; height: 8px; border-bottom: 2px solid #000; margin: 6px auto; border-radius: 50%; opacity: 0; transition: 0.5s; }
+        
+        .light-mode .lamp-head { background: #fff; box-shadow: 0 10px 60px rgba(255,255,255,0.8); border-color: #eee; }
+         .light-mode .light-ray { opacity: 1; }
+        .light-mode .eye { height: 10px; background: #000; border-radius: 50%; }
+        .light-mode .smile { opacity: 1; border-color: #111; }
+
+        /* Dashboard Aesthetic */
+        .dashboard { width: 500px; display: flex; flex-direction: column; gap: 25px; }
+        .search-area { display: flex; gap: 12px; }
+        .search-bar { flex: 1; padding: 18px 25px; border-radius: 50px; border: 1px solid var(--border); background: var(--glass); color: var(--text); backdrop-filter: blur(20px); outline: none; transition: 0.3s; }
+        .search-bar:focus { border-color: var(--accent); box-shadow: 0 0 20px rgba(0,255,136,0.1); }
+        .go-btn { background: var(--accent); color: #000; border: none; padding: 0 25px; border-radius: 50px; cursor: pointer; font-weight: 800; font-size: 13px; }
+
+        .glass-box { background: var(--glass); backdrop-filter: blur(40px); padding: 45px; border-radius: 45px; border: 1px solid var(--border); text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.2); }
+        .tagline { color: var(--accent); font-weight: 800; font-size: 10px; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 15px; }
+        h2 { font-size: 28px; margin-bottom: 25px; font-weight: 700; letter-spacing: -1px; }
+
+        .btn-stack { display: flex; flex-direction: column; gap: 12px; }
+        .btn-stack button { 
+            padding: 16px; border-radius: 16px; border: 1px solid var(--border); 
+            background: rgba(255,255,255,0.02); color: var(--text); cursor: pointer; 
+            font-weight: 600; font-size: 15px; transition: 0.4s; position: relative; overflow: hidden;
+        }
+        .btn-stack button:hover { background: var(--accent); color: #000; transform: translateX(10px); border-color: var(--accent); }
+
+        /* Library Shelf Overlay */
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 100; display: none; flex-direction: column; padding: 50px; transition: 0.5s; }
+        .back-nav { font-size: 45px; cursor: pointer; color: var(--accent); background: none; border: none; align-self: flex-start; transition: 0.3s; }
+        .back-nav:hover { transform: translateX(-10px); }
+        
+        .book-container { display: flex; gap: 40px; justify-content: center; margin-top: 100px; }
+        .book-card { 
+            width: 320px; height: 220px; background: var(--glass); border-left: 8px solid var(--accent); 
+            border-radius: 20px; display: flex; flex-direction: column; justify-content: center; 
+            align-items: center; cursor: pointer; transition: 0.4s; border: 1px solid var(--border);
+        }
+        .book-card:hover { transform: translateY(-15px); background: rgba(0,255,136,0.05); border-color: var(--accent); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+
+        /* Adaptive Reader Box */
+        .reader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 200; display: none; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+        .paper { 
+            background: var(--paper-bg); 
+            color: var(--paper-text); 
+            width: 85%; max-width: 850px; height: 85%; padding: 50px; 
+            border-radius: 25px; overflow-y: auto; position: relative; 
+            border: 1px solid var(--border);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            transition: background 0.5s, color 0.5s;
+        }
+        .close-btn { float: right; cursor: pointer; background: var(--accent); color: #000; border: none; padding: 10px 25px; border-radius: 12px; font-weight: 800; font-size: 12px; }
+        
+        .option { display: block; margin: 12px 0; padding: 18px; border: 1px solid var(--border); border-radius: 12px; cursor: pointer; transition: 0.3s; background: rgba(128,128,128,0.05); }
+        .option:hover { background: var(--accent); color: #000; border-color: var(--accent); }
+    </style>
+</head>
+<body>
+
+    <div class="glow green"></div>
+    <div class="glow blue"></div>
+    <div class="library-bg"></div>
+
+    <div class="main-container">
+        <div class="lamp" onclick="document.body.classList.toggle('light-mode')">
+            <div class="wire"></div>
+            <div class="lamp-head">
+                <div class="eyes"><div class="eye"></div><div class="eye"></div></div>
+                <div class="smile"></div>
+            </div>
+            <p style="margin-top:15px; font-size:9px; font-weight:800; letter-spacing:2px; opacity:0.4;">STUDIO LIGHT</p>
+        </div>
+
+        <div class="dashboard">
+            <div class="search-area">
+                <input type="text" id="browserSearch" class="search-bar" placeholder="Enter topic or URL..." onkeydown="if(event.key==='Enter') executeSearch()">
+                <button class="go-btn" onclick="executeSearch()">EXPLORE</button>
+            </div>
+            <div class="glass-box">
+                <div class="tagline">Professional Library</div>
+                <h2>Creative Developer</h2>
+                <div class="btn-stack">
+                    <button onclick="openShelf('UI/UX Designer')">UI/UX Designer</button>
+                    <button onclick="openShelf('Frontend Development')">Frontend Development</button>
+                    <button onclick="openShelf('Backend Development')">Backend Development</button>
+                    <button onclick="openShelf('Cloud Solutions')">Cloud Solutions</button>
+                    <button onclick="openShelf('AI/ML Mastery')">AI/ML Mastery</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="shelf" class="overlay">
+        <button class="back-nav" onclick="closeShelf()">←</button>
+        <h1 id="shelfTitle" style="text-align:center; font-size:35px; letter-spacing:-1px;">Library</h1>
+        <div class="book-container">
+            <div class="book-card" onclick="openBook('theory')">
+                <h2 style="color:var(--accent); font-size:40px;">01</h2>
+                <h3>CONCEPT BOOK</h3>
+                <p style="font-size:12px; opacity:0.5; margin-top:10px;">Theoretical Knowledge</p>
+            </div>
+            <div class="book-card" onclick="openBook('quiz')">
+                <h2 style="color:var(--accent); font-size:40px;">02</h2>
+                <h3>EXAM PORTAL</h3>
+                <p style="font-size:12px; opacity:0.5; margin-top:10px;">10 MCQ Assessment</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="reader" class="reader">
+        <div class="paper">
+            <button class="close-btn" onclick="closeReader()">EXIT READER</button>
+            <div id="readerBody"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentCat = '';
+        const libraryDB = {
+            'UI/UX Designer': {
+                yt: 'https://www.youtube.com/results?search_query=ui+ux+basics',
+                web: 'https://lawsofux.com',
+                info: 'Master the art of User Interfaces and Experience. Focus on Figma, Design Systems, and Usability Testing.',
+                quiz: [
+                    {q: "Which tool is standard for UI?", a: ["Word", "Figma", "Photoshop", "Notepad"], c: 1},
+                    {q: "UX stands for?", a: ["User Extra", "User Example", "User Experience", "None"], c: 2},
+                    {q: "Hick's law is about?", a: ["Colors", "Choices", "Buttons", "Fonts"], c: 1},
+                    {q: "Primary color for CTAs should be?", a: ["Gray", "Brand/Action Color", "White", "Black"], c: 1},
+                    {q: "A11y refers to?", a: ["Accessibility", "Algorithm", "Alignment", "None"], c: 0},
+                    {q: "What is Kerning?", a: ["Image spacing", "Letter spacing", "Page margin", "Grid"], c: 1},
+                    {q: "A Persona is?", a: ["Real user", "Fictional user", "Robot", "Staff"], c: 1},
+                    {q: "Wireframe is a?", a: ["Final design", "Blueprint", "Code", "Data"], c: 1},
+                    {q: "Typography is?", a: ["Style of text", "Style of image", "Style of video", "None"], c: 0},
+                    {q: "Negative space is?", a: ["Bad space", "Empty space", "Filled space", "Errors"], c: 1}
+                ]
+            },
+            'Frontend Development': {
+                yt: 'https://www.youtube.com/results?search_query=frontend+tutorial',
+                web: 'https://developer.mozilla.org',
+                info: 'Build modern web interfaces using HTML5, CSS3, and JavaScript. Explore React and Performance Optimization.',
+                quiz: [
+                    {q: "Structure of web?", a: ["CSS", "JS", "HTML", "PHP"], c: 2},
+                    {q: "Styling tool?", a: ["HTML", "CSS", "SQL", "Java"], c: 1},
+                    {q: "JS is used for?", a: ["Styling", "Structure", "Interactivity", "Storage"], c: 2},
+                    {q: "JS framework?", a: ["Django", "React", "Laravel", "Flask"], c: 1},
+                    {q: "Flexbox belongs to?", a: ["HTML", "JS", "CSS", "SQL"], c: 2},
+                    {q: "Which property controls inner spacing?", a: ["Margin", "Border", "Padding", "Gap"], c: 2},
+                    {q: "ID selector?", a: [".", "#", "*", "&"], c: 1},
+                    {q: "DOM meaning?", a: ["Data Model", "Document Object Model", "Direct Object", "None"], c: 1},
+                    {q: "Storage in browser?", a: ["Local storage", "Server storage", "Cloud", "None"], c: 0},
+                    {q: "Console.log belongs to?", a: ["CSS", "HTML", "JS", "Python"], c: 2}
+                ]
+            },
+            'Backend Development': {
+                yt: 'https://www.youtube.com/results?search_query=backend+development',
+                web: 'https://nodejs.org',
+                info: 'Handle servers, databases, and logic. Master Node.js, SQL, and API security (JWT).',
+                quiz: [
+                    {q: "Database language?", a: ["HTML", "SQL", "CSS", "JS"], c: 1},
+                    {q: "Server side JS?", a: ["React", "Node.js", "Angular", "Vue"], c: 1},
+                    {q: "Java is?", a: ["Scripting", "Compiled", "Markup", "None"], c: 1},
+                    {q: "API meaning?", a: ["App Interface", "Application Programming Interface", "Access Point", "None"], c: 1},
+                    {q: "404 Error?", a: ["Found", "Not Found", "Forbidden", "Success"], c: 1},
+                    {q: "Primary Key must be?", a: ["Null", "Unique", "Same", "Zero"], c: 1},
+                    {q: "PostgreSQL is?", a: ["Browser", "Database", "Library", "Language"], c: 1},
+                    {q: "JSON is?", a: ["Data format", "Style", "Image", "Video"], c: 0},
+                    {q: "JWT is for?", a: ["Images", "Authentication", "CSS", "Math"], c: 1},
+                    {q: "Standard HTTP Port?", a: ["443", "80", "22", "21"], c: 1}
+                ]
+            },
+            'Cloud Solutions': {
+                yt: 'https://www.youtube.com/results?search_query=aws+basics',
+                web: 'https://aws.amazon.com',
+                info: 'Deploy and scale apps globally. Learn AWS, Azure, Docker, and Kubernetes for modern DevOps.',
+                quiz: [
+                    {q: "AWS belongs to?", a: ["Google", "Microsoft", "Amazon", "IBM"], c: 2},
+                    {q: "S3 is for?", a: ["Compute", "Storage", "Database", "Network"], c: 1},
+                    {q: "EC2 is a?", a: ["Storage", "Virtual Server", "Database", "None"], c: 1},
+                    {q: "Cloud delivery model?", a: ["PaaS", "SaaS", "IaaS", "All"], c: 3},
+                    {q: "Azure belongs to?", a: ["Apple", "Microsoft", "Oracle", "Amazon"], c: 1},
+                    {q: "Serverless computing?", a: ["EC2", "Lambda", "S3", "RDS"], c: 1},
+                    {q: "VPC is?", a: ["Virtual Private Cloud", "Video", "Volume", "None"], c: 0},
+                    {q: "CDN meaning?", a: ["Content Delivery Network", "Data", "Code", "None"], c: 0},
+                    {q: "Vertical scaling?", a: ["Scaling up", "Scaling out", "Scaling down", "None"], c: 0},
+                    {q: "Is cloud scalable?", a: ["Yes", "No", "Maybe", "Never"], c: 0}
+                ]
+            },
+            'AI/ML Mastery': {
+                yt: 'https://www.youtube.com/results?search_query=machine+learning+tutorial',
+                web: 'https://python.org',
+                info: 'Build intelligent systems. Focus on Python, Neural Networks, NLP, and Computer Vision.',
+                quiz: [
+                    {q: "Top AI language?", a: ["C++", "Python", "HTML", "PHP"], c: 1},
+                    {q: "ML meaning?", a: ["Machine Learning", "Model Logic", "Main List", "None"], c: 0},
+                    {q: "Data library?", a: ["Pandas", "CSS", "React", "Node"], c: 0},
+                    {q: "Neural Network is?", a: ["Brain-like model", "Website", "Database", "File"], c: 0},
+                    {q: "Supervised needs?", a: ["Labeled data", "Nothing", "Images", "Links"], c: 0},
+                    {q: "Overfitting is?", a: ["Good", "Bad performance", "Fast", "None"], c: 1},
+                    {q: "NLP focuses on?", a: ["Images", "Language/Text", "Audio", "Robots"], c: 1},
+                    {q: "Computer Vision is?", a: ["Eyes for AI", "Voice", "Math", "None"], c: 0},
+                    {q: "Big Data tool?", a: ["Spark", "Notepad", "Excel", "Word"], c: 0},
+                    {q: "Can AI learn?", a: ["Yes", "Mimics logic", "No", "Always"], c: 1}
+                ]
+            }
+        };
+
+        function executeSearch() {
+            const query = document.getElementById('browserSearch').value;
+            if(query) window.open(query.includes('.') ? (query.startsWith('http') ? query : 'https://'+query) : 'https://www.google.com/search?q='+query, '_blank');
+        }
+
+        function openShelf(cat) {
+            currentCat = cat;
+            document.getElementById('shelfTitle').innerText = cat;
+            document.getElementById('shelf').style.display = 'flex';
+        }
+
+        function openBook(type) {
+            const body = document.getElementById('readerBody');
+            const data = libraryDB[currentCat];
+            if(type === 'theory') {
+                body.innerHTML = `<h1 style="color:var(--accent); font-size:35px;">${currentCat}</h1><br><p style="font-size:18px; line-height:1.8;">${data.info}</p><br>
+                <hr style="border:0; height:1px; background:var(--border); margin:20px 0;">
+                <a href="${data.yt}" target="_blank" style="color:var(--accent); text-decoration:none; font-weight:bold; display:block; margin-bottom:15px;">Watch Best Tutorials →</a>
+                <a href="${data.web}" target="_blank" style="color:var(--secondary); text-decoration:none; font-weight:bold; display:block;">Read Official Documentation →</a>`;
+            } else {
+                let quizHtml = `<h1 style="color:var(--accent);">${currentCat} Exam</h1><p style="opacity:0.6;">Test your professional knowledge.</p><br>`;
+                data.quiz.forEach((q, i) => {
+                    quizHtml += `<p style="margin-top:20px; font-weight:700;">${i+1}. ${q.q}</p>`;
+                    q.a.forEach((opt, oi) => {
+                        quizHtml += `<label class="option"><input type="radio" name="q${i}" value="${oi}"> ${opt}</label>`;
+                    });
+                });
+                quizHtml += `<button onclick="gradeQuiz()" style="padding:18px; width:100%; background:var(--accent); color:#000; border:none; border-radius:15px; cursor:pointer; font-weight:800; margin-top:30px; font-size:16px;">FINISH TEST</button>`;
+                body.innerHTML = quizHtml;
+            }
+            document.getElementById('reader').style.display = 'flex';
+        }
+
+        function gradeQuiz() {
+            const data = libraryDB[currentCat];
+            let score = 0;
+            let resultHtml = `<h2>Results: ${currentCat}</h2><br>`;
+            data.quiz.forEach((q, i) => {
+                const sel = document.querySelector(`input[name="q${i}"]:checked`);
+                const val = sel ? parseInt(sel.value) : -1;
+                const correct = val === q.c;
+                if(correct) score++;
+                resultHtml += `<div style="padding:15px; margin-bottom:10px; border-radius:12px; border:1px solid var(--border); background:${correct ? 'rgba(0,255,136,0.05)' : 'rgba(255,0,0,0.05)'}">
+                    <p>${correct ? '✅' : '❌'} Q${i+1}: Your Answer: ${val===-1?'None':q.a[val]} | Correct: ${q.a[q.c]}</p>
+                </div>`;
+            });
+            document.getElementById('readerBody').innerHTML = `<h1 style="font-size:50px;">Score: ${score}/10</h1><br>` + resultHtml;
+        }
+
+        function closeShelf() { document.getElementById('shelf').style.display = 'none'; }
+        function closeReader() { document.getElementById('reader').style.display = 'none'; }
+    </script>
+</body>
+</html>
